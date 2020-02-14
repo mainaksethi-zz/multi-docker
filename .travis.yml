@@ -1,0 +1,23 @@
+language: generic
+sudo: required
+service:
+    - docker
+before_install:
+    - docker build -t sethimainak/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run -e CI=true sethimainak/react-test npm test
+after_success:
+    - docker build -t sethimainak/multi-client ./client
+    - docker build -t sethimainak/multi-server ./server
+    - docker build -t sethimainak/multi-worker ./worker
+    - docker build -t sethimainak/multi-nginx ./nginx
+
+
+# Log in to the docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+# Take image and push to docker hub
+    - docker push sethimainak/multi-client
+    - docker push sethimainak/multi-server
+    - docker push sethimainak/multi-worker
+    - docker push sethimainak/multi-nginx

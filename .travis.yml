@@ -21,3 +21,14 @@ after_success:
     - docker push sethimainak/multi-server
     - docker push sethimainak/multi-worker
     - docker push sethimainak/multi-nginx
+deploy:
+    provider: elasticbeanstalk
+    regiion: ap-south-1
+    app: multi-docker
+    env: MultiDocker-env-2
+    bucket_name: elasticbeanstalk-ap-south-1-625681424745
+    bucket_path: docker-multi
+    on:
+        branch: master
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
